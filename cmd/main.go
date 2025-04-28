@@ -1,0 +1,45 @@
+package main
+
+import (
+	"log"
+
+	"github.com/Memchikkr/go-routes/api/routes"
+	"github.com/Memchikkr/go-routes/bootstrap"
+	"github.com/Memchikkr/go-routes/docs"
+	"github.com/Memchikkr/go-routes/migrations"
+	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+)
+
+//	@title			API
+//	@version		1.0
+//	@description	API
+//	@host			localhost:8080
+//	@BasePath		/
+func main() {
+	app := bootstrap.App()
+	defer app.Close()
+
+	env := app.Env
+
+	migrator := migrations.NewMigrator(
+		env.DBHost,
+		env.DBPort,
+		env.DBUser,
+		env.DBPassword,
+		env.DBName,
+	)
+
+	if err := migrator.Up(); err != nil {
+		log.Fatalf("migration error: %v", err)
+	}
+
+	gin := gin.Default()
+
+	docs.SwaggerInfo.BasePath = "/"
+	gin.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	routes.Setup(env, gin)
+
+	gin.Run(":" + env.AppPort)
+}
