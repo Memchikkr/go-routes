@@ -1,0 +1,64 @@
+basePath: /
+definitions:
+  models.AuthRequest:
+    properties:
+      login:
+        example: user@example.com
+        type: string
+      password:
+        example: qwerty123
+        type: string
+    type: object
+  models.AuthResponse:
+    properties:
+      token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+    type: object
+  models.ErrorResponse:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: Неверные учетные данные
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API
+  title: API
+  version: "1.0"
+paths:
+  /auth:
+    post:
+      consumes:
+      - application/json
+      description: Выполняет аутентификацию и возвращает токен
+      parameters:
+      - description: Данные для входа
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.AuthRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Аутентификация пользователя
+      tags:
+      - auth
+swagger: "2.0"
