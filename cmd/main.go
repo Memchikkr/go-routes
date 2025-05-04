@@ -19,6 +19,7 @@ import (
 //	@BasePath		/
 func main() {
 	app := bootstrap.App()
+	db := app.DB.DB
 	defer app.Close()
 
 	env := app.Env
@@ -39,7 +40,7 @@ func main() {
 
 	docs.SwaggerInfo.BasePath = "/"
 	gin.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	routes.Setup(env, gin)
+	routes.Setup(env, db, gin)
 
 	gin.Run(":" + env.AppPort)
 }
