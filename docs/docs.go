@@ -27,7 +27,7 @@ const docTemplate = `{
                 "tags": [
                     "auth"
                 ],
-                "summary": "Аутентификация пользователя",
+                "summary": "Authentification",
                 "parameters": [
                     {
                         "description": "Данные для входа",
@@ -60,26 +60,90 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/auth/refresh": {
+            "post": {
+                "description": "Выполняет аутентификацию с помощью RefreshToken и возвращает новую пару токенов",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Refresh tokens",
+                "parameters": [
+                    {
+                        "description": "Refresh token",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.RefreshRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.AuthResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
         "models.AuthRequest": {
             "type": "object",
             "properties": {
-                "login": {
-                    "type": "string",
-                    "example": "user@example.com"
+                "auth_date": {
+                    "type": "integer",
+                    "example": 1746370731
                 },
-                "password": {
+                "first_name": {
                     "type": "string",
-                    "example": "qwerty123"
+                    "example": "Andrey"
+                },
+                "hash": {
+                    "type": "string",
+                    "example": "90ee68ec25e9b34019e..."
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 123456789
+                },
+                "last_name": {
+                    "type": "string",
+                    "example": "Popov"
+                },
+                "photo_url": {
+                    "type": "string",
+                    "example": "https://t.me/i/userpic/..."
+                },
+                "username": {
+                    "type": "string",
+                    "example": "User"
                 }
             }
         },
         "models.AuthResponse": {
             "type": "object",
             "properties": {
-                "token": {
+                "access_token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                },
+                "refresh_token": {
                     "type": "string",
                     "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                 }
@@ -90,11 +154,20 @@ const docTemplate = `{
             "properties": {
                 "code": {
                     "type": "integer",
-                    "example": 400
+                    "example": 401
                 },
                 "message": {
                     "type": "string",
-                    "example": "Неверные учетные данные"
+                    "example": "Invalid credentials"
+                }
+            }
+        },
+        "models.RefreshRequest": {
+            "type": "object",
+            "properties": {
+                "refresh_token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                 }
             }
         }
