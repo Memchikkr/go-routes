@@ -1,16 +1,16 @@
 package bootstrap
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"time"
 
 	_ "github.com/lib/pq"
+	"github.com/jmoiron/sqlx"
 )
 
 type PostgresClient struct {
-	DB *sql.DB
+	DB *sqlx.DB
 }
 
 func NewPostgresClient(env *Env) *PostgresClient {
@@ -23,7 +23,7 @@ func NewPostgresClient(env *Env) *PostgresClient {
 		env.DBName,
 	)
 
-	db, err := sql.Open("postgres", connStr)
+	db, err := sqlx.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal("Error connection to PostgreSQL: ", err)
 	}
