@@ -18,6 +18,26 @@ services:
       retries: 5
     networks:
       - custom-network
+    
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:7.2
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "test@test.com"
+      PGADMIN_DEFAULT_PASSWORD: "test"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+    networks:
+      - custom-network
 
   migrate:
     image: migrate/migrate
@@ -55,6 +75,7 @@ services:
 
 volumes:
   postgres_data:
+  pgadmin_data:
 
 networks:
   custom-network:
