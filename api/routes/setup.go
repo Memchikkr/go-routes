@@ -3,9 +3,10 @@ package routes
 import (
 	"github.com/Memchikkr/go-routes/bootstrap"
 	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
 )
 
-func Setup(env *bootstrap.Env, gin *gin.Engine) {
+func Setup(env *bootstrap.Env, db *sqlx.DB, gin *gin.Engine) {
 	publicRouter := gin.Group("")
-	NewAuthRouter(env, publicRouter)
+	NewAuthRouter(env, db, publicRouter)
 }
