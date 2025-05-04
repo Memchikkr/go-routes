@@ -11,9 +11,8 @@ CREATE TABLE IF NOT EXISTS "user" (
     tg_username VARCHAR(32) DEFAULT NULL,
     tg_id BIGINT UNIQUE NOT NULL,
     phone_number VARCHAR(20) DEFAULT NULL,
-    name VARCHAR(50) NOT NULL,
-    role_id INTEGER NOT NULL REFERENCES role(id),
-    surname VARCHAR(50) NOT NULL,
+    name VARCHAR(50) DEFAULT NULL,
+    surname VARCHAR(50) DEFAULT NULL,
     username VARCHAR(50) DEFAULT NULL UNIQUE,
     access_token VARCHAR(128) DEFAULT NULL UNIQUE,
     refresh_token VARCHAR(128) DEFAULT NULL UNIQUE,
@@ -22,6 +21,11 @@ CREATE TABLE IF NOT EXISTS "user" (
 CREATE UNIQUE INDEX IF NOT EXISTS user_tg_id_idx ON "user" (tg_id);
 CREATE UNIQUE INDEX IF NOT EXISTS user_username_idx ON "user" (username);
 
+CREATE TABLE IF NOT EXISTS "user_role" (
+    user_id INTEGER NOT NULL REFERENCES "user"(id),
+    role_id INTEGER NOT NULL REFERENCES role(id),
+    expired_on TIMESTAMP DEFAULT NULL
+);
 CREATE TABLE IF NOT EXISTS "route" (
     id SERIAL PRIMARY KEY,
     start_address VARCHAR(128) NOT NULL,
