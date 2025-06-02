@@ -79,6 +79,7 @@ func (ac *AuthController) Auth(c *gin.Context) {
 // @Summary Refresh tokens
 // @Description	Выполняет аутентификацию с помощью RefreshToken и возвращает новую пару токенов
 // @Tags auth
+// @Security BearerAuth
 // @Accept json
 // @Produce json
 // @Param input body models.RefreshRequest true "Refresh token"
