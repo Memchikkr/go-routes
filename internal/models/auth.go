@@ -18,8 +18,3 @@ type AuthResponse struct {
     AccessToken string `json:"access_token" example:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."`
     RefreshToken string `json:"refresh_token" example:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."`
 }
-
-type ErrorResponse struct {
-	Code    int    `json:"code" example:"401"`
-	Message string `json:"message" example:"Invalid credentials"`
-}
