@@ -1,4 +1,3 @@
-basePath: /
 definitions:
   models.AuthRequest:
     properties:
@@ -33,6 +32,47 @@ definitions:
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
         type: string
     type: object
+  models.BookingWithDetails:
+    properties:
+      arrival_time:
+        type: string
+      booking_time:
+        type: string
+      brand:
+        type: string
+      departure_time:
+        type: string
+      driver_id:
+        type: integer
+      is_approved:
+        type: boolean
+      is_completed:
+        type: boolean
+      license_plate:
+        type: string
+      phone_number:
+        type: string
+      price:
+        type: number
+      start_address:
+        type: string
+      start_latitude:
+        type: number
+      start_longitude:
+        type: number
+      stop_address:
+        type: string
+      stop_latitude:
+        type: number
+      stop_longitude:
+        type: number
+      tg_username:
+        type: string
+      trip_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
   models.ErrorResponse:
     properties:
       code:
@@ -48,7 +88,189 @@ definitions:
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
         type: string
     type: object
-host: localhost:8080
+  models.Route:
+    properties:
+      id:
+        type: integer
+      start_address:
+        type: string
+      start_latitude:
+        type: number
+      start_longitude:
+        type: number
+      stop_address:
+        type: string
+      stop_latitude:
+        type: number
+      stop_longitude:
+        type: number
+      user_id:
+        type: integer
+    type: object
+  models.RouteCreateRequest:
+    properties:
+      start_address:
+        example: Moscow, Russia
+        type: string
+      start_latitude:
+        example: 42.223
+        type: number
+      start_longitude:
+        example: 42.223
+        type: number
+      stop_address:
+        example: Moscow, Russia
+        type: string
+      stop_latitude:
+        example: 42.223
+        type: number
+      stop_longitude:
+        example: 42.223
+        type: number
+    type: object
+  models.Trip:
+    properties:
+      arrival_time:
+        type: string
+      departure_time:
+        type: string
+      driver_id:
+        type: integer
+      id:
+        type: integer
+      is_completed:
+        type: boolean
+      price:
+        type: number
+      route_id:
+        type: integer
+      seats_count:
+        type: integer
+      vehicle_id:
+        type: integer
+    type: object
+  models.TripCreateRequest:
+    properties:
+      arrival_time:
+        type: string
+      departure_time:
+        type: string
+      price:
+        type: number
+      route_id:
+        type: integer
+      seats_count:
+        type: integer
+      vehicle_id:
+        type: integer
+    type: object
+  models.TripWithDetails:
+    properties:
+      arrival_time:
+        type: string
+      available_seats:
+        type: integer
+      bookings_count:
+        type: integer
+      brand:
+        type: string
+      departure_time:
+        type: string
+      description:
+        type: string
+      driver_id:
+        type: integer
+      id:
+        type: integer
+      is_completed:
+        type: boolean
+      license_plate:
+        type: string
+      name:
+        type: string
+      phone_number:
+        type: string
+      price:
+        type: number
+      seats_count:
+        type: integer
+      start_address:
+        type: string
+      start_latitude:
+        type: number
+      start_longitude:
+        type: number
+      stop_address:
+        type: string
+      stop_latitude:
+        type: number
+      stop_longitude:
+        type: number
+      surname:
+        type: string
+      tg_username:
+        type: string
+    type: object
+  models.UserPutRequest:
+    properties:
+      description:
+        example: description
+        type: string
+      name:
+        example: name
+        type: string
+      phone_number:
+        example: "+89009009090"
+        type: string
+      surname:
+        example: surname
+        type: string
+      username:
+        example: username
+        type: string
+    type: object
+  models.UserResponse:
+    properties:
+      description:
+        example: description
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: name
+        type: string
+      phone_number:
+        example: "+89009009090"
+        type: string
+      surname:
+        example: surname
+        type: string
+      username:
+        example: username
+        type: string
+    type: object
+  models.Vehicle:
+    properties:
+      brand:
+        type: string
+      id:
+        type: integer
+      license_plate:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  models.VehicleCreateRequest:
+    properties:
+      brand:
+        example: BMW
+        type: string
+      license_plate:
+        example: М798КМ136
+        type: string
+    type: object
+host: localhost:3000
 info:
   contact: {}
   description: API
@@ -109,7 +331,482 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Refresh tokens
       tags:
       - auth
+  /routes:
+    get:
+      consumes:
+      - application/json
+      description: Получить записи о маршруте
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Route'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: GetRouteRecords
+      tags:
+      - routes
+    post:
+      consumes:
+      - application/json
+      description: Создать запись о маршруте
+      parameters:
+      - description: Данные для создания
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.RouteCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: CreateRouteRecord
+      tags:
+      - routes
+  /routes/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удалить запись о маршруте
+      parameters:
+      - description: id маршрута
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: DeleteRouteRecord
+      tags:
+      - routes
+  /trips:
+    get:
+      consumes:
+      - application/json
+      description: Получить все записи о поездках
+      parameters:
+      - description: Город отправления
+        example: Москва
+        in: query
+        name: from
+        type: string
+      - description: Город назначения
+        example: Санкт-Петербург
+        in: query
+        name: to
+        type: string
+      - description: Дата (YYYY-MM-DD)
+        example: "2025-05-20"
+        in: query
+        name: date
+        type: string
+      - description: Минимальное кол-во мест
+        example: 2
+        in: query
+        minimum: 1
+        name: min_seats
+        type: integer
+      - description: Максимальная цена
+        example: 1500.5
+        in: query
+        minimum: 0
+        name: max_price
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.TripWithDetails'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: GetTrips
+      tags:
+      - trip
+    post:
+      consumes:
+      - application/json
+      description: Создать запись о поездке
+      parameters:
+      - description: Данные для создания
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.TripCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: CreateTrip
+      tags:
+      - trip
+  /trips/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удалить поездку
+      parameters:
+      - description: id поездки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: DeleteTrip
+      tags:
+      - trip
+    get:
+      consumes:
+      - application/json
+      description: Получить одну запись о поездке
+      parameters:
+      - description: id поездки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Trip'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: GetTrip
+      tags:
+      - trip
+  /trips/{id}/bookings:
+    delete:
+      consumes:
+      - application/json
+      description: Удалить запись о бронировании
+      parameters:
+      - description: id поездки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: DeleteBookingRecord
+      tags:
+      - booking
+    get:
+      consumes:
+      - application/json
+      description: Получить все записи о забронированных местах
+      parameters:
+      - description: id поездки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BookingWithDetails'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: GetBookingRecords
+      tags:
+      - booking
+    post:
+      consumes:
+      - application/json
+      description: Забронировать поездку
+      parameters:
+      - description: id поездки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: CreateBookingRecord
+      tags:
+      - booking
+  /trips/{id}/complete:
+    post:
+      consumes:
+      - application/json
+      description: Завершить поездку
+      parameters:
+      - description: id поездки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: CompleteTrip
+      tags:
+      - trip
+  /users/{id}/trips:
+    get:
+      consumes:
+      - application/json
+      description: Получить все свои записи о поездках
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.TripWithDetails'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: GetMyTrips
+      tags:
+      - trip
+  /users/me:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает сущность пользователя
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.UserResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: GetMe
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные пользователя
+      parameters:
+      - description: Данные для обновления
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserPutRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: UpdateUser
+      tags:
+      - user
+  /users/me/bookings:
+    get:
+      consumes:
+      - application/json
+      description: Получить запись о своих бронированиях
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BookingWithDetails'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: GetMyBookingRecords
+      tags:
+      - booking
+  /vehicle/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удалить запись об автомобиле
+      parameters:
+      - description: id транспорта
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: DeleteVehicleRecord
+      tags:
+      - vehicle
+  /vehicles:
+    get:
+      consumes:
+      - application/json
+      description: Получить записи об автомобилях
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Vehicle'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: GetVehicleRecords
+      tags:
+      - vehicle
+    post:
+      consumes:
+      - application/json
+      description: Создать запись об автомобиле
+      parameters:
+      - description: Данные для создания
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.VehicleCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: CreateVehicleRecord
+      tags:
+      - vehicle
+securityDefinitions:
+  BearerAuth:
+    description: 'Введите: "Bearer {ваш_JWT_токен}"'
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
