@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS "user_role" (
 );
 CREATE TABLE IF NOT EXISTS "route" (
     id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES "user"(id),
     start_address VARCHAR(128) NOT NULL,
     start_latitude DECIMAL(10, 8),
     start_longitude DECIMAL(11, 8),
@@ -38,6 +39,7 @@ CREATE TABLE IF NOT EXISTS "route" (
 
 CREATE TABLE IF NOT EXISTS vehicle (
     id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES "user"(id),
     brand VARCHAR(64) NOT NULL,
     license_plate VARCHAR(20) NOT NULL UNIQUE
 );
